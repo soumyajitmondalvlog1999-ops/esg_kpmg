@@ -4,6 +4,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+# Set Plotly's default template to dark
+px.defaults.template = "plotly_dark"
+
 
 # Set page configuration
 st.set_page_config(
@@ -94,7 +97,7 @@ else:
 
     with col3:
         renewable_share = filtered_df['renewable_energy_share_pct'].mean()
-        st.metric("Avg Renewable Energy %", f"{renewable_share:.1%}")
+        st.metric("Avg Renewable Energy %", f"{renewable_share:.1f}%")
 
     with col4:
         female_ratio = filtered_df['female_pct'].mean()
@@ -225,6 +228,8 @@ else:
             }).reset_index()
 
             fig = go.Figure()
+            # --- THEME UPDATE ---
+            fig.update_layout(template="plotly_dark")
             fig.add_trace(go.Bar(name='Waste Generated (tonnes)', x=dept_waste['department'],
                                  y=dept_waste['waste_generated_tonnes'], yaxis='y'))
             fig.add_trace(go.Scatter(name='Recycling Rate (%)', x=dept_waste['department'],
@@ -264,6 +269,8 @@ else:
             # Water Usage and Recycling Over Time
             water_data = filtered_df.groupby('year')[['water_withdrawal_m3', 'water_recycled_pct']].mean().reset_index()
             fig = make_subplots(specs=[[{"secondary_y": True}]])
+            # --- THEME UPDATE ---
+            fig.update_layout(template="plotly_dark")
             fig.add_trace(go.Scatter(x=water_data['year'], y=water_data['water_withdrawal_m3'],
                                      name="Water Withdrawal"), secondary_y=False)
             fig.add_trace(go.Scatter(x=water_data['year'], y=water_data['water_recycled_pct'],
@@ -333,6 +340,8 @@ else:
             }).reset_index()
 
             fig = make_subplots(specs=[[{"secondary_y": True}]])
+            # --- THEME UPDATE ---
+            fig.update_layout(template="plotly_dark")
             fig.add_trace(go.Scatter(x=env_trends['year'], y=env_trends['green_efficiency_score'],
                                      name="Green Efficiency Score"), secondary_y=False)
             fig.add_trace(go.Scatter(x=env_trends['year'], y=env_trends['carbon_intensity'],
@@ -372,6 +381,8 @@ else:
 
                 # Create a grouped bar chart for better readability
                 fig = go.Figure()
+                # --- THEME UPDATE ---
+                fig.update_layout(template="plotly_dark")
 
                 # Add bars for each metric
                 fig.add_trace(go.Bar(
@@ -416,7 +427,7 @@ else:
                         side='right'
                     ),
                     barmode='group',
-                    font=dict(size=12, color='black'),
+                    font=dict(size=12), # Color will be inherited from dark theme
                     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                     hovermode='x unified'
                 )
@@ -595,6 +606,8 @@ else:
             hr_data = filtered_df.groupby('year')[
                 ['avg_training_hours_per_employee', 'employee_turnover_pct']].mean().reset_index()
             fig = make_subplots(specs=[[{"secondary_y": True}]])
+            # --- THEME UPDATE ---
+            fig.update_layout(template="plotly_dark")
             fig.add_trace(go.Scatter(x=hr_data['year'], y=hr_data['avg_training_hours_per_employee'],
                                      name="Training Hours"), secondary_y=False)
             fig.add_trace(go.Scatter(x=hr_data['year'], y=hr_data['employee_turnover_pct'],
@@ -614,6 +627,8 @@ else:
             }).reset_index()
 
             fig = go.Figure()
+            # --- THEME UPDATE ---
+            fig.update_layout(template="plotly_dark")
             fig.add_trace(go.Bar(
                 name='Pay Equity Ratio',
                 x=equity_engagement['department'],
@@ -724,6 +739,8 @@ else:
                         'value': 1.0
                     }
                 }))
+            # --- THEME UPDATE ---
+            fig.update_layout(template="plotly_dark")
             st.plotly_chart(fig, use_container_width=True)
 
         # Section 5: Composite Index Metrics
@@ -849,6 +866,8 @@ else:
             }).reset_index()
 
             fig = go.Figure()
+            # --- THEME UPDATE ---
+            fig.update_layout(template="plotly_dark")
             fig.add_trace(go.Bar(
                 name='Avg Board Size',
                 x=board_structures['region'],
@@ -1029,6 +1048,8 @@ else:
                         'value': 80
                     }
                 }))
+            # --- THEME UPDATE ---
+            fig.update_layout(template="plotly_dark")
             st.plotly_chart(fig, use_container_width=True)
 
         with col1:
