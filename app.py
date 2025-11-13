@@ -111,6 +111,7 @@ def inject_custom_css():
         [data-testid="stFileUploader"] section {
             background-color: #0f172a;
             border-color: #334155;
+            color: #f1f5f9; /* <-- ADDED: Fix text color */
         }
 
         [data-testid="stFileUploader"] section small {
@@ -128,6 +129,15 @@ def inject_custom_css():
             background-color: #475569;
             color: #f1f5f9;
             border: none;
+        }
+        
+        /* Style the expander */
+        [data-testid="stExpander"] summary {
+            color: #f1f5f9; /* <-- ADDED: Fix expander title color */
+        }
+
+        [data-testid="stExpander"] {
+             color: #f1f5f9; /* <-- ADDED: Fix expander content color */
         }
         /* --- END NEW SIDEBAR STYLES --- */
 
@@ -1410,7 +1420,7 @@ else:
                 esg_trends['period'] = esg_trends['year'].astype(str) + '-Q' + esg_trends['quarter'].astype(str)
 
                 fig = px.line(esg_trends, x='period', y='esg_score',
-                              title="ESG Score Trend Over Time")
+                                  title="ESG Score Trend Over Time")
                 fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
                 st.plotly_chart(fig, use_container_width=True)
 
@@ -1456,7 +1466,7 @@ else:
                 st.download_button(
                     label="Download Filtered Data as CSV",
                     data=csv,
-                    file_name=f"esg_data_{selected_company.replace(' ', '_')}.csv",
+                    file_name=f"esg_data_{selected_company.replace(' ', '_')...",
                     mime="text/csv"
                 )
 
