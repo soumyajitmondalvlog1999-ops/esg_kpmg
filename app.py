@@ -84,6 +84,20 @@ def inject_custom_css():
         
         /* --- END NEW DROPDOWN STYLES --- */
 
+        /* --- NEW STYLE FOR DOWNLOAD BUTTON --- */
+        [data-testid="stDownloadButton"] button {
+            background-color: #22a079; /* Use the primary accent color */
+            color: #f1f5f9;
+            border: 1px solid #22a079;
+        }
+
+        [data-testid="stDownloadButton"] button:hover {
+            background-color: #1e8f6e; /* A slightly darker green for hover */
+            color: #f1f5f9;
+            border: 1px solid #1e8f6e;
+        }
+        /* --- END NEW BUTTON STYLE --- */
+
         /* Fix multiselect tags (the red boxes) */
         [data-testid="stTag"] {
             background-color: #334155;
