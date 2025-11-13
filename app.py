@@ -97,6 +97,39 @@ def inject_custom_css():
             border: 1px solid #1e8f6e;
         }
         /* --- END NEW BUTTON STYLE --- */
+        
+        /* --- NEW STYLES FOR SIDEBAR COMPONENTS --- */
+
+        /* Style the st.info box */
+        [data-testid="stInfo"] {
+            background-color: #263e63; /* A muted, dark-theme blue */
+            border: 1px solid #3b82f6; /* Blue border */
+            color: #e0f2fe; /* Light blue text */
+        }
+        
+        /* Style the file uploader box */
+        [data-testid="stFileUploader"] section {
+            background-color: #0f172a;
+            border-color: #334155;
+        }
+
+        [data-testid="stFileUploader"] section small {
+            color: #94a3b8; /* Lighter text for the 'Limit 200MB' */
+        }
+
+        /* Style the 'Browse files' button */
+        [data-testid="stFileUploader"] button {
+            background-color: #334155;
+            color: #f1f5f9;
+            border: none;
+        }
+
+        [data-testid="stFileUploader"] button:hover {
+            background-color: #475569;
+            color: #f1f5f9;
+            border: none;
+        }
+        /* --- END NEW SIDEBAR STYLES --- */
 
         /* Fix multiselect tags (the red boxes) */
         [data-testid="stTag"] {
@@ -1440,7 +1473,7 @@ else:
         
         It looks like your CSV is missing a required column: `{e}`.
         
-        Please ensure your file has all the necessary columns (e.g., 'company_name', 'year', 'esg_score', 'scope1_emissions_tco2e', etc.) and try again.
+        Please ensure your file has all the necessary columns (e.Example: 'company_name', 'year', 'esg_score', 'scope1_emissions_tco2e', etc.) and try again.
         """)
     except Exception as e:
         st.error(f"An unexpected error occurred while processing the data.")
