@@ -8,7 +8,7 @@ from plotly.subplots import make_subplots
 px.defaults.template = "plotly_dark"
 
 
-# --- NEW FUNCTION TO INJECT CUSTOM CSS ---
+# --- UPDATED FUNCTION TO INJECT CUSTOM CSS ---
 def inject_custom_css():
     """
     Injects custom CSS to force a dark theme for the app,
@@ -24,7 +24,7 @@ def inject_custom_css():
         
         /* Main app text and headers */
         body, .stApp, .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6, 
-        .stMarkdown, .stMetric, .stHeader, .stSubheader, .stTabs {
+        .stMarkdown, .stHeader, .stSubheader, .stTabs {
             color: #f1f5f9 !important;
         }
 
@@ -40,10 +40,47 @@ def inject_custom_css():
             color: #f1f5f9;
         }
 
-        /* Metric labels */
-        .stMetric .st-bq {
+        /* --- NEW STYLES TO FIX WIDGETS AND METRICS --- */
+
+        /* Fix Metric numbers */
+        [data-testid="stMetricValue"] {
+            color: #f1f5f9;
+        }
+        
+        /* Fix Metric labels */
+        [data-testid="stMetricLabel"] {
+            color: #cbd5e1 !important;
+        }
+        .stMetric .st-bq { /* Fallback */
             color: #cbd5e1;
         }
+
+        /* Fix Selectbox and Multiselect backgrounds */
+        [data-testid="stSelectbox"] div[data-baseweb="select"] > div,
+        [data-testid="stMultiSelect"] div[data-baseweb="select"] > div {
+            background-color: #0f172a; /* Darker background for the widget */
+            border-color: #334155;
+            color: #f1f5f9;
+        }
+        
+        /* Fix dropdown menus (when you click on a selectbox) */
+        div[data-baseweb="popover"] ul {
+             background-color: #1e293b;
+             color: #f1f5f9;
+        }
+
+        /* Fix multiselect tags (the red boxes) */
+        [data-testid="stTag"] {
+            background-color: #334155;
+            color: #f1f5f9;
+            border: none;
+        }
+        /* Fix the 'x' in the multiselect tag */
+        [data-testid="stTag"] svg {
+            fill: #f1f5f9;
+        }
+        
+        /* --- END NEW STYLES --- */
 
         /* Tab labels */
         .stTabs [data-baseweb="tab"] {
@@ -238,7 +275,7 @@ else:
             fig = px.line(energy_intensity_trend, x='year', y='energy_intensity',
                           title="Energy Intensity Trend (MWh per Production Unit)",
                           markers=True)
-            fig.update_layout(yaxis_title="MWh per Unit")
+            fig.update_layout(yaxis_title="MWh per Unit", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Average Emissions by Scope Over Time
@@ -247,6 +284,7 @@ else:
             fig = px.line(emissions_data, x='year',
                           y=['scope1_emissions_tco2e', 'scope2_emissions_tco2e', 'scope3_emissions_tco2e'],
                           title="Average Emissions by Scope Over Time")
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
@@ -255,13 +293,14 @@ else:
             fig = px.line(carbon_intensity_trend, x='year', y='carbon_intensity',
                           title="Carbon Intensity Trend (tCO₂e per MUSD Revenue)",
                           markers=True)
-            fig.update_layout(yaxis_title="tCO₂e per MUSD")
+            fig.update_layout(yaxis_title="tCO₂e per MUSD", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Renewable Energy Share by Region
             renewable_by_region = filtered_df.groupby('region')['renewable_energy_share_pct'].mean().reset_index()
             fig = px.bar(renewable_by_region, x='region', y='renewable_energy_share_pct',
                          title="Renewable Energy Share by Region")
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
 
@@ -276,14 +315,14 @@ else:
             fig = px.line(waste_recycled_trend, x='year', y='waste_recycled_pct',
                           title="Total Waste Recycled (%) Over Time",
                           markers=True)
-            fig.update_layout(yaxis_title="Waste Recycled (%)")
+            fig.update_layout(yaxis_title="Waste Recycled (%)", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Waste Intensity by Region
             waste_intensity_region = filtered_df.groupby('region')['waste_intensity'].mean().reset_index()
             fig = px.bar(waste_intensity_region, x='region', y='waste_intensity',
                          title="Waste Intensity by Region (Tonnes per Production Unit)")
-            fig.update_layout(yaxis_title="Tonnes per Unit")
+            fig.update_layout(yaxis_title="Tonnes per Unit", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
@@ -295,7 +334,7 @@ else:
 
             fig = go.Figure()
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark")
+            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             fig.add_trace(go.Bar(name='Waste Generated (tonnes)', x=dept_waste['department'],
                                  y=dept_waste['waste_generated_tonnes'], yaxis='y'))
             fig.add_trace(go.Scatter(name='Recycling Rate (%)', x=dept_waste['department'],
@@ -317,6 +356,7 @@ else:
             fig = px.scatter(waste_data, x='waste_generated_tonnes', y='waste_recycled_pct',
                              size='waste_generated_tonnes', color='department',
                              title="Waste Generation vs Recycling Rate by Department")
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         # Row 3: Water Usage
@@ -329,14 +369,14 @@ else:
             fig = px.line(water_intensity_trend, x='year', y='water_intensity',
                           title="Water Intensity Trend (m³ per Production Unit)",
                           markers=True)
-            fig.update_layout(yaxis_title="m³ per Unit")
+            fig.update_layout(yaxis_title="m³ per Unit", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Water Usage and Recycling Over Time
             water_data = filtered_df.groupby('year')[['water_withdrawal_m3', 'water_recycled_pct']].mean().reset_index()
             fig = make_subplots(specs=[[{"secondary_y": True}]])
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark")
+            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             fig.add_trace(go.Scatter(x=water_data['year'], y=water_data['water_withdrawal_m3'],
                                      name="Water Withdrawal"), secondary_y=False)
             fig.add_trace(go.Scatter(x=water_data['year'], y=water_data['water_recycled_pct'],
@@ -355,7 +395,7 @@ else:
                              size='water_withdrawal_m3', color='region',
                              title="Regional Water Dependency: Withdrawal vs Recycling",
                              hover_data=['region'])
-            fig.update_layout(xaxis_title="Water Withdrawal (m³)", yaxis_title="Water Recycled (%)")
+            fig.update_layout(xaxis_title="Water Withdrawal (m³)", yaxis_title="Water Recycled (%)", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         # Row 4: Combined Environmental Performance
@@ -369,7 +409,7 @@ else:
                          title="Departmental Environmental Rating (Green Efficiency Score)",
                          color='green_efficiency_score',
                          color_continuous_scale='Viridis')
-            fig.update_layout(yaxis_title="Green Efficiency Score")
+            fig.update_layout(yaxis_title="Green Efficiency Score", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Departmental Environmental Performance Matrix
@@ -385,7 +425,7 @@ else:
                              title="Departmental Performance: Carbon Intensity vs Green Score",
                              hover_data=['waste_recycled_pct'])
             fig.update_layout(xaxis_title="Carbon Intensity (tCO₂e/MUSD)",
-                              yaxis_title="Green Efficiency Score")
+                              yaxis_title="Green Efficiency Score", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
@@ -395,7 +435,7 @@ else:
                              title="Emissions Intensity vs ESG Score",
                              trendline="lowess",
                              hover_data=['department', 'year'])
-            fig.update_layout(xaxis_title="Carbon Intensity (tCO₂e/MUSD)", yaxis_title="ESG Score")
+            fig.update_layout(xaxis_title="Carbon Intensity (tCO₂e/MUSD)", yaxis_title="ESG Score", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Environmental Performance Over Time
@@ -407,7 +447,7 @@ else:
 
             fig = make_subplots(specs=[[{"secondary_y": True}]])
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark")
+            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             fig.add_trace(go.Scatter(x=env_trends['year'], y=env_trends['green_efficiency_score'],
                                      name="Green Efficiency Score"), secondary_y=False)
             fig.add_trace(go.Scatter(x=env_trends['year'], y=env_trends['carbon_intensity'],
@@ -427,6 +467,7 @@ else:
                                  color='department', trendline="ols",
                                  title="Energy Intensity vs Carbon Intensity Correlation",
                                  hover_data=['region', 'year'])
+                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
                 st.plotly_chart(fig, use_container_width=True)
 
             with col2:
@@ -448,7 +489,7 @@ else:
                 # Create a grouped bar chart for better readability
                 fig = go.Figure()
                 # --- THEME UPDATE ---
-                fig.update_layout(template="plotly_dark")
+                fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 
                 # Add bars for each metric
                 fig.add_trace(go.Bar(
@@ -560,13 +601,14 @@ else:
                          title="Gender Diversity by Department",
                          barmode='stack',
                          labels={'value': 'Percentage', 'variable': 'Gender'})
-            fig.update_layout(yaxis_title="Percentage", yaxis_tickformat=".0%")
+            fig.update_layout(yaxis_title="Percentage", yaxis_tickformat=".0%", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Diversity metrics over time
             diversity_data = filtered_df.groupby('year')[['female_pct', 'minority_pct']].mean().reset_index()
             fig = px.line(diversity_data, x='year', y=['female_pct', 'minority_pct'],
                           title="Diversity Metrics Over Time")
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
@@ -575,7 +617,7 @@ else:
             fig = px.line(minority_trend, x='year', y='minority_pct', color='region',
                           title="Minority Representation Over Time by Region",
                           markers=True)
-            fig.update_layout(yaxis_title="Minority Percentage", yaxis_tickformat=".1%")
+            fig.update_layout(yaxis_title="Minority Percentage", yaxis_tickformat=".1%", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Pay Equity Analysis by Department
@@ -586,7 +628,7 @@ else:
                          color_continuous_scale='RdYlGn',
                          range_color=[0.8, 1.2])
             fig.add_hline(y=1.0, line_dash="dash", line_color="red", annotation_text="Ideal Equity")
-            fig.update_layout(yaxis_title="Pay Equity Ratio (Female to Male)")
+            fig.update_layout(yaxis_title="Pay Equity Ratio (Female to Male)", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         # Section 2: Employee Well-Being & Development
@@ -600,7 +642,7 @@ else:
                          title="Average Training Hours by Department",
                          color='avg_training_hours_per_employee',
                          color_continuous_scale='Blues')
-            fig.update_layout(yaxis_title="Training Hours")
+            fig.update_layout(yaxis_title="Training Hours", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Employee Turnover Trend Over Time
@@ -609,7 +651,7 @@ else:
             fig = px.line(turnover_trend, x='period', y='employee_turnover_pct',
                           title="Employee Turnover Trend Over Time",
                           markers=True)
-            fig.update_layout(yaxis_title="Turnover Rate", yaxis_tickformat=".1%")
+            fig.update_layout(yaxis_title="Turnover Rate", yaxis_tickformat=".1%", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
@@ -618,7 +660,7 @@ else:
             fig = px.line(safety_trend, x='year', y='lost_time_incident_rate',
                           title="Lost Time Incident Rate (Safety Performance)",
                           markers=True)
-            fig.update_layout(yaxis_title="Incident Rate")
+            fig.update_layout(yaxis_title="Incident Rate", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Training vs Turnover vs Engagement Correlation Heatmap
@@ -628,6 +670,7 @@ else:
                             title="Employee Metrics Correlation Heatmap",
                             color_continuous_scale='RdBu',
                             aspect="auto")
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         # Section 3: Employee Engagement & Satisfaction
@@ -640,20 +683,21 @@ else:
             engagement_by_dept = filtered_df.groupby('department')['employee_engagement_score'].mean().reset_index()
             fig = px.bar(engagement_by_dept, x='department', y='employee_engagement_score',
                          title="Employee Engagement by Department")
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             engagement_trend = filtered_df.groupby('year')['employee_engagement_score'].mean().reset_index()
             fig = px.line(engagement_trend, x='year', y='employee_engagement_score',
                           title="Employee Engagement Score Over Time",
                           markers=True)
-            fig.update_layout(yaxis_title="Engagement Score")
+            fig.update_layout(yaxis_title="Engagement Score", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Community Investment Impact
             community_investment = filtered_df.groupby('year')['community_investment_usd_m'].sum().reset_index()
             fig = px.area(community_investment, x='year', y='community_investment_usd_m',
                           title="Community Investment Over Time")
-            fig.update_layout(yaxis_title="Community Investment (USD M)")
+            fig.update_layout(yaxis_title="Community Investment (USD M)", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
@@ -665,7 +709,7 @@ else:
                              hover_data=['department', 'year'])
             fig.update_layout(xaxis_title="Employee Engagement Score",
                               yaxis_title="Turnover Rate",
-                              yaxis_tickformat=".1%")
+                              yaxis_tickformat=".1%", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Training and turnover
@@ -673,7 +717,7 @@ else:
                 ['avg_training_hours_per_employee', 'employee_turnover_pct']].mean().reset_index()
             fig = make_subplots(specs=[[{"secondary_y": True}]])
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark")
+            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             fig.add_trace(go.Scatter(x=hr_data['year'], y=hr_data['avg_training_hours_per_employee'],
                                      name="Training Hours"), secondary_y=False)
             fig.add_trace(go.Scatter(x=hr_data['year'], y=hr_data['employee_turnover_pct'],
@@ -694,7 +738,7 @@ else:
 
             fig = go.Figure()
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark")
+            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             fig.add_trace(go.Bar(
                 name='Pay Equity Ratio',
                 x=equity_engagement['department'],
@@ -742,7 +786,7 @@ else:
                             color_continuous_scale='RdYlGn',
                             aspect="auto",
                             labels=dict(x="Training Hours Level", y="Region", color="Pay Equity Ratio"))
-            fig.update_layout(xaxis_title="Training Hours Level", yaxis_title="Region")
+            fig.update_layout(xaxis_title="Training Hours Level", yaxis_title="Region", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
@@ -780,7 +824,9 @@ else:
                 xaxis_title="Minority Percentage",
                 yaxis_title="Pay Equity Ratio",
                 xaxis_tickformat=".0%",
-                showlegend=True
+                showlegend=True,
+                paper_bgcolor='rgba(0,0,0,0)', 
+                plot_bgcolor='rgba(0,0,0,0)'
             )
             st.plotly_chart(fig, use_container_width=True)
 
@@ -806,7 +852,7 @@ else:
                     }
                 }))
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark")
+            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         # Section 5: Composite Index Metrics
@@ -820,7 +866,7 @@ else:
                          title="Social Well-Being Index by Department",
                          color='social_well_being_index',
                          color_continuous_scale='Viridis')
-            fig.update_layout(yaxis_title="Social Well-Being Index")
+            fig.update_layout(yaxis_title="Social Well-Being Index", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Social Well-Being Index Trend
@@ -828,7 +874,7 @@ else:
             fig = px.line(social_trend, x='year', y='social_well_being_index',
                           title="Social Well-Being Index Over Time",
                           markers=True)
-            fig.update_layout(yaxis_title="Social Well-Being Index")
+            fig.update_layout(yaxis_title="Social Well-Being Index", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
@@ -838,7 +884,7 @@ else:
                          title="Diversity & Inclusion Index by Region",
                          color='diversity_inclusion_index',
                          color_continuous_scale='Plasma')
-            fig.update_layout(yaxis_title="Diversity & Inclusion Index")
+            fig.update_layout(yaxis_title="Diversity & Inclusion Index", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Diversity & Inclusion Index Trend
@@ -846,7 +892,7 @@ else:
             fig = px.line(diversity_trend, x='year', y='diversity_inclusion_index',
                           title="Diversity & Inclusion Index Over Time",
                           markers=True)
-            fig.update_layout(yaxis_title="Diversity & Inclusion Index")
+            fig.update_layout(yaxis_title="Diversity & Inclusion Index", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         # Additional detailed analysis
@@ -866,6 +912,7 @@ else:
                                  size='employee_engagement_score', color='region',
                                  title="Regional Social Performance: Well-Being vs Diversity",
                                  hover_data=['pay_equity_ratio_female_to_male'])
+                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
                 st.plotly_chart(fig, use_container_width=True)
 
             with col2:
@@ -880,7 +927,7 @@ else:
                                  size='avg_training_hours_per_employee', color='department',
                                  title="Department Performance: Well-Being vs Turnover",
                                  trendline="lowess")
-                fig.update_layout(yaxis_title="Turnover Rate", yaxis_tickformat=".1%")
+                fig.update_layout(yaxis_title="Turnover Rate", yaxis_tickformat=".1%", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
                 st.plotly_chart(fig, use_container_width=True)
 
 
@@ -933,7 +980,7 @@ else:
 
             fig = go.Figure()
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark")
+            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             fig.add_trace(go.Bar(
                 name='Avg Board Size',
                 x=board_structures['region'],
@@ -968,6 +1015,7 @@ else:
             fig = px.line(board_data, x='year', y=['board_gender_diversity_pct', 'independent_directors_pct'],
                           title="Board Composition Over Time",
                           markers=True)
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         # Section 2: Ethics, Compliance & Risk
@@ -996,6 +1044,7 @@ else:
                             title="Governance Risk Heatmap by Region",
                             color_continuous_scale='Reds',
                             aspect="auto")
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Whistleblower Activity Over Time
@@ -1004,6 +1053,7 @@ else:
                 fig = px.line(whistleblower_trend, x='year', y='whistleblower_reports',
                               title="Whistleblower Reports Over Time",
                               markers=True)
+                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
                 st.plotly_chart(fig, use_container_width=True)
 
         with col2:
@@ -1013,6 +1063,7 @@ else:
                 fig = px.line(breach_trend, x='year', y='data_breaches_count',
                               title="Data Breach Trends",
                               markers=True, color_discrete_sequence=['red'])
+                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
                 st.plotly_chart(fig, use_container_width=True)
 
             # Fines and Penalties Tracker
@@ -1022,7 +1073,7 @@ else:
                              title="Fines and Penalties Over Time",
                              color='fines_penalties_usd_m',
                              color_continuous_scale='Reds')
-                fig.update_layout(yaxis_title="Fines (USD M)")
+                fig.update_layout(yaxis_title="Fines (USD M)", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
                 st.plotly_chart(fig, use_container_width=True)
 
         with col1:
@@ -1031,6 +1082,7 @@ else:
             anti_corruption = filtered_df.groupby('department')['anti_corruption_training_pct'].mean().reset_index()
             fig = px.bar(anti_corruption, x='department', y='anti_corruption_training_pct',
                          title="Anti-Corruption Training Completion by Department")
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         # Section 3: Transparency & Reporting Features
@@ -1091,6 +1143,7 @@ else:
                             color_continuous_scale='RdBu',
                             aspect="auto",
                             zmin=-1, zmax=1)
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
 
@@ -1118,7 +1171,7 @@ else:
                     }
                 }))
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark")
+            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         with col1:
@@ -1129,7 +1182,7 @@ else:
                          title="Governance Effectiveness by Department",
                          color='governance_effectiveness_index',
                          color_continuous_scale='Viridis')
-            fig.update_layout(yaxis_title="Governance Effectiveness Index")
+            fig.update_layout(yaxis_title="Governance Effectiveness Index", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         # Section 5: Policy & Compliance Oversight
@@ -1145,7 +1198,7 @@ else:
                              size='board_size',
                              title="ESG Policy Coverage vs ESG Score",
                              trendline="ols")
-            fig.update_layout(xaxis_title="ESG Policy Coverage (%)", yaxis_title="ESG Score")
+            fig.update_layout(xaxis_title="ESG Policy Coverage (%)", yaxis_title="ESG Score", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Supplier Code of Conduct Compliance
@@ -1153,7 +1206,7 @@ else:
             fig = px.line(supplier_trend, x='year', y='supplier_code_of_conduct_coverage_pct',
                           title="Supplier Code of Conduct Coverage Over Time",
                           markers=True)
-            fig.update_layout(yaxis_title="Supplier Code Coverage (%)")
+            fig.update_layout(yaxis_title="Supplier Code Coverage (%)", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
@@ -1166,7 +1219,7 @@ else:
                          title="ESG Policy Gap Tracker by Department",
                          color_discrete_map={True: 'green', False: 'red'})
             fig.add_hline(y=70, line_dash="dash", line_color="red", annotation_text="70% Threshold")
-            fig.update_layout(yaxis_title="ESG Policy Coverage (%)")
+            fig.update_layout(yaxis_title="ESG Policy Coverage (%)", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
             # Controversy levels (existing pie chart)
@@ -1174,6 +1227,7 @@ else:
             controversy_data.columns = ['controversy_level', 'count']
             fig = px.pie(controversy_data, values='count', names='controversy_level',
                          title="Distribution of Controversy Levels")
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         # Detailed Analysis Expandable Section
@@ -1195,6 +1249,7 @@ else:
                                  color='region',
                                  title="Regional Governance vs ESG Performance",
                                  hover_data=['region'])
+                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
                 st.plotly_chart(fig, use_container_width=True)
 
             with col2:
@@ -1211,6 +1266,7 @@ else:
                                  size='whistleblower_reports',
                                  color='department',
                                  title="Department Risk Profile Analysis")
+                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
                 st.plotly_chart(fig, use_container_width=True)
 
 
@@ -1224,6 +1280,7 @@ else:
 
         fig = px.line(esg_trends, x='period', y='esg_score',
                       title="ESG Score Trend Over Time")
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
         st.plotly_chart(fig, use_container_width=True)
 
         col1, col2 = st.columns(2)
@@ -1233,6 +1290,7 @@ else:
             regional_esg = filtered_df.groupby('region')['esg_score'].mean().reset_index()
             fig = px.bar(regional_esg, x='region', y='esg_score',
                          title="Average ESG Score by Region")
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
@@ -1240,6 +1298,7 @@ else:
             dept_esg = filtered_df.groupby('department')['esg_score'].mean().reset_index()
             fig = px.bar(dept_esg, x='department', y='esg_score',
                          title="Average ESG Score by Department")
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
     with tab5:
