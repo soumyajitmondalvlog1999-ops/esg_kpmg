@@ -1,0 +1,42 @@
+column_name,type,description
+company_id,String,Unique company identifier
+company_name,String,Company name
+industry,Category,GICS-style sector
+region,Category,Operating region
+year,Integer,Calendar year
+quarter,Integer,Quarter (1-4)
+reporting_period,String,"Formatted period label, e.g., 2024-Q3"
+department,Category,Business function
+revenue_usd_m,Float,Department revenue in USD millions
+opex_usd_m,Float,Operating expense in USD millions
+production_output_units,Integer,Units produced / processed (dept-level)
+energy_consumption_mwh,Float,Energy consumed (MWh)
+renewable_energy_share_pct,Float [0-1],Share of energy from renewable sources
+scope1_emissions_tco2e,Float,Direct GHG emissions (tCO2e)
+scope2_emissions_tco2e,Float,Indirect energy emissions (tCO2e)
+scope3_emissions_tco2e,Float,Value-chain emissions (tCO2e)
+water_withdrawal_m3,Float,Water withdrawal (m³)
+water_recycled_pct,Float [0-1],Share of water recycled
+waste_generated_tonnes,Float,Waste generated (tonnes)
+waste_recycled_pct,Float [0-1],Share of waste recycled
+headcount,Integer,Employee count (dept-level)
+female_pct,Float [0-1],Share of women employees
+minority_pct,Float [0-1],Share of minority employees
+avg_training_hours_per_employee,Float,Average annual training hours per employee
+employee_turnover_pct,Float [0-1],Voluntary + involuntary turnover rate
+lost_time_incident_rate,Float,LTIR per 200k hours worked
+community_investment_usd_m,Float,Community investment (USD millions)
+pay_equity_ratio_female_to_male,Float,Median pay ratio F/M (1.0 ideal)
+employee_engagement_score,Float [0-100],Engagement survey score
+board_size,Integer,Board members count
+independent_directors_pct,Float [0-1],Share of independent directors
+board_gender_diversity_pct,Float [0-1],Share of women on the board
+anti_corruption_training_pct,Float [0-1],Share of workforce trained
+data_breaches_count,Integer,Security incidents (count)
+whistleblower_reports,Integer,Reports received
+fines_penalties_usd_m,Float,Regulatory fines (USD millions)
+esg_policy_coverage_pct,Float [0-1],Share of org under ESG policies
+supplier_code_of_conduct_coverage_pct,Float [0-1],Share of suppliers under code
+emissions_intensity_tco2e_per_musd,Float,tCO2e per million USD revenue
+esg_score,Float [0-100],Composite ESG score
+controversy_level_0_low_3_high,Integer [0-3],Controversy flag (higher = worse)
