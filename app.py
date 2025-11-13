@@ -1469,10 +1469,21 @@ else:
                     file_name=f"esg_data_{selected_company.replace(' ', '_')}.csv",
                     mime="text/csv"
                 )
- 
+
+        # Footer
+        st.markdown("---")
+        st.markdown(
+            "**GreenLens ESG Analytics** | Data updated regularly | "
+            "For more information, contact your ESG representative."
+        )
+
+    except KeyError as e:
+        st.error(f"""
+        **Error processing the uploaded file!**
+        
         It looks like your CSV is missing a required column: `{e}`.
         
-        Please ensure your file has all the necessary columns (e.Example: 'company_name', 'year', 'esg_score', 'scope1_emissions_tco2e', etc.) and try again.
+        Please ensure your file has all the necessary columns (e.g., 'company_name', 'year', 'esg_score', 'scope1_emissions_tco2e', etc.) and try again.
         """)
     except Exception as e:
         st.error(f"An unexpected error occurred while processing the data.")
