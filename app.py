@@ -346,11 +346,14 @@ else:
             }).reset_index()
 
             fig = go.Figure()
-            # --- THEME UPDATE ---
+            # --- FINAL THEME UPDATE ---
             fig.update_layout(
-                template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
-                title_font_color='#f1f5f9', legend_font_color='#f1f5f9',
-                title="Departmental Waste Comparison",
+                paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                legend_font_color='#f1f5f9',
+                title={
+                    'text': "Departmental Waste Comparison",
+                    'font': {'color': '#f1f5f9'}
+                },
                 xaxis_title="Department",
                 yaxis_title="Waste Generated (tonnes)",
                 yaxis2=dict(title="Recycling Rate (%)", overlaying='y', side='right', range=[0, 100]),
@@ -388,11 +391,14 @@ else:
             # Water Usage and Recycling Over Time
             water_data = filtered_df.groupby('year')[['water_withdrawal_m3', 'water_recycled_pct']].mean().reset_index()
             fig = make_subplots(specs=[[{"secondary_y": True}]])
-            # --- THEME UPDATE ---
+            # --- FINAL THEME UPDATE ---
             fig.update_layout(
-                template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
-                title_font_color='#f1f5f9', legend_font_color='#f1f5f9',
-                title="Water Usage and Recycling Over Time"
+                paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                legend_font_color='#f1f5f9',
+                title={
+                    'text': "Water Usage and Recycling Over Time",
+                    'font': {'color': '#f1f5f9'}
+                }
             )
             fig.add_trace(go.Scatter(x=water_data['year'], y=water_data['water_withdrawal_m3'],
                                      name="Water Withdrawal"), secondary_y=False)
@@ -462,11 +468,14 @@ else:
             }).reset_index()
 
             fig = make_subplots(specs=[[{"secondary_y": True}]])
-            # --- THEME UPDATE ---
+            # --- FINAL THEME UPDATE ---
             fig.update_layout(
-                template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
-                title_font_color='#f1f5f9', legend_font_color='#f1f5f9',
-                title="Environmental Performance Trends Over Time"
+                paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                legend_font_color='#f1f5f9',
+                title={
+                    'text': "Environmental Performance Trends Over Time",
+                    'font': {'color': '#f1f5f9'}
+                }
             )
             fig.add_trace(go.Scatter(x=env_trends['year'], y=env_trends['green_efficiency_score'],
                                      name="Green Efficiency Score"), secondary_y=False)
@@ -507,11 +516,14 @@ else:
 
                 # Create a grouped bar chart for better readability
                 fig = go.Figure()
-                # --- THEME UPDATE ---
+                # --- FINAL THEME UPDATE ---
                 fig.update_layout(
-                    template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
-                    title_font_color='#f1f5f9', legend_font_color='#f1f5f9',
-                    title="Regional Environmental Performance Comparison",
+                    paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                    legend_font_color='#f1f5f9',
+                    title={
+                        'text': "Regional Environmental Performance Comparison",
+                        'font': {'color': '#f1f5f9'}
+                    },
                     xaxis_title="Region",
                     yaxis_title="Score (%)",
                     yaxis2=dict(
@@ -734,11 +746,14 @@ else:
             hr_data = filtered_df.groupby('year')[
                 ['avg_training_hours_per_employee', 'employee_turnover_pct']].mean().reset_index()
             fig = make_subplots(specs=[[{"secondary_y": True}]])
-            # --- THEME UPDATE ---
+            # --- FINAL THEME UPDATE ---
             fig.update_layout(
-                template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
-                title_font_color='#f1f5f9', legend_font_color='#f1f5f9',
-                title="Training Hours vs Employee Turnover"
+                paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                legend_font_color='#f1f5f9',
+                title={
+                    'text': "Training Hours vs Employee Turnover",
+                    'font': {'color': '#f1f5f9'}
+                }
             )
             fig.add_trace(go.Scatter(x=hr_data['year'], y=hr_data['avg_training_hours_per_employee'],
                                      name="Training Hours"), secondary_y=False)
@@ -758,11 +773,14 @@ else:
             }).reset_index()
 
             fig = go.Figure()
-            # --- THEME UPDATE ---
+            # --- FINAL THEME UPDATE ---
             fig.update_layout(
-                template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
-                title_font_color='#f1f5f9', legend_font_color='#f1f5f9',
-                title="Pay Equity vs Employee Engagement by Department",
+                paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                legend_font_color='#f1f5f9',
+                title={
+                    'text': "Pay Equity vs Employee Engagement by Department",
+                    'font': {'color': '#f1f5f9'}
+                },
                 xaxis_title="Department",
                 yaxis=dict(title="Pay Equity Ratio", side='left', range=[0.8, 1.2]),
                 yaxis2=dict(title="Engagement Score", side='right', overlaying='y', range=[0, 100]),
@@ -875,7 +893,7 @@ else:
                     }
                 }))
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         # Section 5: Composite Index Metrics
@@ -1002,11 +1020,14 @@ else:
             }).reset_index()
 
             fig = go.Figure()
-            # --- THEME UPDATE ---
+            # --- FINAL THEME UPDATE ---
             fig.update_layout(
-                template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
-                title_font_color='#f1f5f9', legend_font_color='#f1f5f9',
-                title="Regional Comparison of Board Structures",
+                paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                legend_font_color='#f1f5f9',
+                title={
+                    'text': "Regional Comparison of Board Structures",
+                    'font': {'color': '#f1f5f9'}
+                },
                 xaxis_title="Region",
                 yaxis=dict(title="Board Size", side='left'),
                 yaxis2=dict(title="Independent Directors %", side='right', overlaying='y'),
@@ -1194,7 +1215,7 @@ else:
                     }
                 }))
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         with col1:
