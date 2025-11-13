@@ -1466,21 +1466,10 @@ else:
                 st.download_button(
                     label="Download Filtered Data as CSV",
                     data=csv,
-                    file_name=f"esg_data_{selected_company.replace(' ', '_')...",
+                    file_name=f"esg_data_{selected_company.replace(' ', '_')}.csv",
                     mime="text/csv"
                 )
-
-        # Footer
-        st.markdown("---")
-        st.markdown(
-            "**GreenLens ESG Analytics** | Data updated regularly | "
-            "For more information, contact your ESG representative."
-        )
-
-    except KeyError as e:
-        st.error(f"""
-        **Error processing the uploaded file!**
-        
+ 
         It looks like your CSV is missing a required column: `{e}`.
         
         Please ensure your file has all the necessary columns (e.Example: 'company_name', 'year', 'esg_score', 'scope1_emissions_tco2e', etc.) and try again.
