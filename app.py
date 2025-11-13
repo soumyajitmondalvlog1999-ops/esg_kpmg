@@ -8,6 +8,69 @@ from plotly.subplots import make_subplots
 px.defaults.template = "plotly_dark"
 
 
+# --- NEW FUNCTION TO INJECT CUSTOM CSS ---
+def inject_custom_css():
+    """
+    Injects custom CSS to force a dark theme for the app,
+    bypassing the .streamlit/config.toml file.
+    """
+    custom_css = """
+    <style>
+        /* Main app background */
+        .main .block-container {
+            background-color: #0f172a;
+            color: #f1f5f9;
+        }
+        
+        /* Main app text and headers */
+        body, .stApp, .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6, 
+        .stMarkdown, .stMetric, .stHeader, .stSubheader, .stTabs {
+            color: #f1f5f9 !important;
+        }
+
+        /* Sidebar background */
+        [data-testid="stSidebar"] {
+            background-color: #1e293b;
+        }
+
+        /* Sidebar text */
+        [data-testid="stSidebar"] .stMarkdown, 
+        [data-testid="stSidebar"] .stSelectbox, 
+        [data-testid="stSidebar"] label {
+            color: #f1f5f9;
+        }
+
+        /* Metric labels */
+        .stMetric .st-bq {
+            color: #cbd5e1;
+        }
+
+        /* Tab labels */
+        .stTabs [data-baseweb="tab"] {
+            color: #cbd5e1;
+        }
+
+        /* Selected tab */
+        .stTabs [data-baseweb="tab"][aria-selected="true"] {
+            color: #22a079;
+        }
+        
+        /* Set background for the main app area (outside the centered block) */
+        [data-testid="stAppViewContainer"] {
+            background-color: #0f172a;
+        }
+        
+        /* Ensure headers in the main container are also dark */
+        [data-testid="stAppViewContainer"] h1,
+        [data-testid="stAppViewContainer"] h2,
+        [data-testid="stAppViewContainer"] h3 {
+             color: #f1f5f9;
+        }
+    </style>
+    """
+    st.markdown(custom_css, unsafe_allow_html=True)
+
+
 # Set page configuration
 st.set_page_config(
     page_title="GreenLens ESG Analytics",
@@ -15,6 +78,9 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# --- CALL THE NEW CSS FUNCTION ---
+inject_custom_css()
 
 
 # Load and cache data
@@ -919,8 +985,11 @@ else:
             # Normalize for heatmap
             risk_normalized = risk_data.copy()
             for col in ['data_breaches_count', 'whistleblower_reports', 'fines_penalties_usd_m']:
-                risk_normalized[col] = (risk_data[col] - risk_data[col].min()) / (
-                            risk_data[col].max() - risk_data[col].min())
+                if risk_data[col].max() - risk_data[col].min() != 0:
+                    risk_normalized[col] = (risk_data[col] - risk_data[col].min()) / (
+                                risk_data[col].max() - risk_data[col].min())
+                else:
+                    risk_normalized[col] = 0.5 # Avoid division by zero if all values are same
 
             risk_normalized = risk_normalized.set_index('region')
             fig = px.imshow(risk_normalized.T,
