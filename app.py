@@ -107,16 +107,23 @@ def inject_custom_css():
             color: #e0f2fe; /* Light blue text */
         }
         
-        /* Style the file uploader box */
+        /* --- UPDATED: Style the file uploader box --- */
         [data-testid="stFileUploader"] section {
             background-color: #0f172a;
             border-color: #334155;
-            color: #f1f5f9; /* <-- ADDED: Fix text color */
         }
 
-        [data-testid="stFileUploader"] section small {
-            color: #94a3b8; /* Lighter text for the 'Limit 200MB' */
+        /* Force text color on uploader 'Drag and drop' text */
+        [data-testid="stFileUploader"] section div,
+        [data-testid="stFileUploader"] section span {
+             color: #f1f5f9 !important; 
         }
+        
+        /* Force text color on uploader 'Limit 200MB' text */
+        [data-testid="stFileUploader"] section small {
+            color: #94a3b8 !important; 
+        }
+        /* --- END UPDATE --- */
 
         /* Style the 'Browse files' button */
         [data-testid="stFileUploader"] button {
