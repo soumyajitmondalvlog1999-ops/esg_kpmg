@@ -1,0 +1,25 @@
+[theme]
+
+The 'base' theme will be dark
+
+base = "dark"
+
+Primary accent color (used for widgets)
+
+primaryColor = "#22a079"
+
+Main background color
+
+backgroundColor = "#0f172a"
+
+Secondary background color (used for sidebar and cards)
+
+secondaryBackgroundColor = "#1e293b"
+
+Text color
+
+textColor = "#f1f5f9"
+
+Font
+
+font = "sans serif"
