@@ -68,12 +68,13 @@ def inject_custom_css():
         /* Fix dropdown menus (when you click on a selectbox) */
         div[data-baseweb="popover"] ul {
              background-color: #1e293b;
-             color: #f1f5f9;
         }
         
-        /* Fix dropdown menu item text */
-        div[data-baseweb="popover"] ul li div[data-baseweb="list-item-content"] {
+        /* Fix dropdown menu item text and background */
+        div[data-baseweb="popover"] ul li,
+        div[data-baseweb="popover"] ul li div[role="option"] {
             color: #f1f5f9 !important;
+            background-color: #1e293b !important; /* Force background of item */
         }
 
         /* Fix dropdown menu item hover */
@@ -346,20 +347,20 @@ else:
 
             fig = go.Figure()
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
-            fig.add_trace(go.Bar(name='Waste Generated (tonnes)', x=dept_waste['department'],
-                                 y=dept_waste['waste_generated_tonnes'], yaxis='y'))
-            fig.add_trace(go.Scatter(name='Recycling Rate (%)', x=dept_waste['department'],
-                                     y=dept_waste['waste_recycled_pct'], yaxis='y2',
-                                     mode='lines+markers', line=dict(color='red')))
-
             fig.update_layout(
+                template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                title_font_color='#f1f5f9', legend_font_color='#f1f5f9',
                 title="Departmental Waste Comparison",
                 xaxis_title="Department",
                 yaxis_title="Waste Generated (tonnes)",
                 yaxis2=dict(title="Recycling Rate (%)", overlaying='y', side='right', range=[0, 100]),
                 barmode='group'
             )
+            fig.add_trace(go.Bar(name='Waste Generated (tonnes)', x=dept_waste['department'],
+                                 y=dept_waste['waste_generated_tonnes'], yaxis='y'))
+            fig.add_trace(go.Scatter(name='Recycling Rate (%)', x=dept_waste['department'],
+                                     y=dept_waste['waste_recycled_pct'], yaxis='y2',
+                                     mode='lines+markers', line=dict(color='red')))
             st.plotly_chart(fig, use_container_width=True)
 
             # Waste Generation vs Recycling Rate by Department
@@ -388,12 +389,15 @@ else:
             water_data = filtered_df.groupby('year')[['water_withdrawal_m3', 'water_recycled_pct']].mean().reset_index()
             fig = make_subplots(specs=[[{"secondary_y": True}]])
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+            fig.update_layout(
+                template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                title_font_color='#f1f5f9', legend_font_color='#f1f5f9',
+                title="Water Usage and Recycling Over Time"
+            )
             fig.add_trace(go.Scatter(x=water_data['year'], y=water_data['water_withdrawal_m3'],
                                      name="Water Withdrawal"), secondary_y=False)
             fig.add_trace(go.Scatter(x=water_data['year'], y=water_data['water_recycled_pct'],
                                      name="Water Recycled %"), secondary_y=True)
-            fig.update_layout(title="Water Usage and Recycling Over Time")
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
@@ -459,12 +463,15 @@ else:
 
             fig = make_subplots(specs=[[{"secondary_y": True}]])
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+            fig.update_layout(
+                template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                title_font_color='#f1f5f9', legend_font_color='#f1f5f9',
+                title="Environmental Performance Trends Over Time"
+            )
             fig.add_trace(go.Scatter(x=env_trends['year'], y=env_trends['green_efficiency_score'],
                                      name="Green Efficiency Score"), secondary_y=False)
             fig.add_trace(go.Scatter(x=env_trends['year'], y=env_trends['carbon_intensity'],
                                      name="Carbon Intensity"), secondary_y=True)
-            fig.update_layout(title="Environmental Performance Trends Over Time")
             fig.update_yaxes(title_text="Green Efficiency Score", secondary_y=False)
             fig.update_yaxes(title_text="Carbon Intensity", secondary_y=True)
             st.plotly_chart(fig, use_container_width=True)
@@ -501,7 +508,22 @@ else:
                 # Create a grouped bar chart for better readability
                 fig = go.Figure()
                 # --- THEME UPDATE ---
-                fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+                fig.update_layout(
+                    template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                    title_font_color='#f1f5f9', legend_font_color='#f1f5f9',
+                    title="Regional Environmental Performance Comparison",
+                    xaxis_title="Region",
+                    yaxis_title="Score (%)",
+                    yaxis2=dict(
+                        title="Carbon Intensity (tCO₂e/MUSD)",
+                        overlaying='y',
+                        side='right'
+                    ),
+                    barmode='group',
+                    font=dict(size=12), # Color will be inherited from dark theme
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                    hovermode='x unified'
+                )
 
                 # Add bars for each metric
                 fig.add_trace(go.Bar(
@@ -535,22 +557,6 @@ else:
                     line=dict(color='#FF4500', width=3),
                     marker=dict(size=8, color='#FF4500')
                 ))
-
-                fig.update_layout(
-                    title="Regional Environmental Performance Comparison",
-                    xaxis_title="Region",
-                    yaxis_title="Score (%)",
-                    yaxis2=dict(
-                        title="Carbon Intensity (tCO₂e/MUSD)",
-                        overlaying='y',
-                        side='right'
-                    ),
-                    barmode='group',
-                    font=dict(size=12), # Color will be inherited from dark theme
-                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-                    hovermode='x unified'
-                )
-
                 st.plotly_chart(fig, use_container_width=True)
 
     with tab2:
@@ -729,12 +735,15 @@ else:
                 ['avg_training_hours_per_employee', 'employee_turnover_pct']].mean().reset_index()
             fig = make_subplots(specs=[[{"secondary_y": True}]])
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+            fig.update_layout(
+                template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                title_font_color='#f1f5f9', legend_font_color='#f1f5f9',
+                title="Training Hours vs Employee Turnover"
+            )
             fig.add_trace(go.Scatter(x=hr_data['year'], y=hr_data['avg_training_hours_per_employee'],
                                      name="Training Hours"), secondary_y=False)
             fig.add_trace(go.Scatter(x=hr_data['year'], y=hr_data['employee_turnover_pct'],
                                      name="Turnover %"), secondary_y=True)
-            fig.update_layout(title="Training Hours vs Employee Turnover")
             st.plotly_chart(fig, use_container_width=True)
 
         # Section 4: Social Equity & Fairness
@@ -750,7 +759,15 @@ else:
 
             fig = go.Figure()
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+            fig.update_layout(
+                template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                title_font_color='#f1f5f9', legend_font_color='#f1f5f9',
+                title="Pay Equity vs Employee Engagement by Department",
+                xaxis_title="Department",
+                yaxis=dict(title="Pay Equity Ratio", side='left', range=[0.8, 1.2]),
+                yaxis2=dict(title="Engagement Score", side='right', overlaying='y', range=[0, 100]),
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5)
+            )
             fig.add_trace(go.Bar(
                 name='Pay Equity Ratio',
                 x=equity_engagement['department'],
@@ -767,14 +784,6 @@ else:
                 line=dict(color='#ff7f0e', width=3),
                 marker=dict(size=8, color='#ff7f0e')
             ))
-
-            fig.update_layout(
-                title="Pay Equity vs Employee Engagement by Department",
-                xaxis_title="Department",
-                yaxis=dict(title="Pay Equity Ratio", side='left', range=[0.8, 1.2]),
-                yaxis2=dict(title="Engagement Score", side='right', overlaying='y', range=[0, 100]),
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5)
-            )
             fig.add_hline(y=1.0, line_dash="dash", line_color="red", annotation_text="Ideal Equity")
             st.plotly_chart(fig, use_container_width=True)
 
@@ -850,7 +859,7 @@ else:
             fig = go.Figure(go.Indicator(
                 mode="gauge+number",
                 value=pay_equity,
-                title={'text': "Average Pay Equity Ratio (Female to Male)"},
+                title={'text': "Average Pay Equity Ratio (Female to Male)", 'font': {'color': '#f1f5f9'}},
                 gauge={
                     'axis': {'range': [0.8, 1.2]},
                     'bar': {'color': "darkblue"},
@@ -866,7 +875,7 @@ else:
                     }
                 }))
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         # Section 5: Composite Index Metrics
@@ -994,7 +1003,15 @@ else:
 
             fig = go.Figure()
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+            fig.update_layout(
+                template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                title_font_color='#f1f5f9', legend_font_color='#f1f5f9',
+                title="Regional Comparison of Board Structures",
+                xaxis_title="Region",
+                yaxis=dict(title="Board Size", side='left'),
+                yaxis2=dict(title="Independent Directors %", side='right', overlaying='y'),
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5)
+            )
             fig.add_trace(go.Bar(
                 name='Avg Board Size',
                 x=board_structures['region'],
@@ -1010,14 +1027,6 @@ else:
                 mode='lines+markers',
                 line=dict(color='#ff7f0e', width=3)
             ))
-
-            fig.update_layout(
-                title="Regional Comparison of Board Structures",
-                xaxis_title="Region",
-                yaxis=dict(title="Board Size", side='left'),
-                yaxis2=dict(title="Independent Directors %", side='right', overlaying='y'),
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5)
-            )
             st.plotly_chart(fig, use_container_width=True)
 
 
@@ -1168,7 +1177,7 @@ else:
             fig = go.Figure(go.Indicator(
                 mode="gauge+number+delta",
                 value=gov_index,
-                title={'text': "Governance Effectiveness Index"},
+                title={'text': "Governance Effectiveness Index", 'font': {'color': '#f1f5f9'}},
                 delta={'reference': previous_gov_index},
                 gauge={
                     'axis': {'range': [0, 100]},
@@ -1185,7 +1194,7 @@ else:
                     }
                 }))
             # --- THEME UPDATE ---
-            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+            fig.update_layout(template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
 
         with col1:
@@ -1234,7 +1243,7 @@ else:
                          color_discrete_map={True: 'green', False: 'red'})
             fig.add_hline(y=70, line_dash="dash", line_color="red", annotation_text="70% Threshold")
             fig.update_layout(yaxis_title="ESG Policy Coverage (%)", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
-            st.plotly_chart(fig, use_container_width=T)
+            st.plotly_chart(fig, use_container_width=True)
 
             # Controversy levels (existing pie chart)
             controversy_data = filtered_df['controversy_level_0_low_3_high'].value_counts().reset_index()
