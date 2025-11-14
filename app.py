@@ -599,8 +599,8 @@ else:
                                          color='department', trendline="ols",
                                          title="Energy Intensity vs Carbon Intensity Correlation",
                                          hover_data=['region', 'year'])
-                        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
-                        st.plotly_chart(fig, use_container_width=True)
+                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+                st.plotly_chart(fig, use_container_width=True)
 
     with tab2:
         st.subheader("Social Performance", icon="groups")
@@ -976,11 +976,11 @@ else:
                                          size='employee_engagement_score', color='region',
                                          title="Regional Social Performance: Well-Being vs Diversity",
                                          hover_data=['pay_equity_ratio_female_to_male'])
-                        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
-                        st.plotly_chart(fig, use_container_width=True)
+                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+                st.plotly_chart(fig, use_container_width=True)
 
-                    with col2:
-                        # Department Performance Matrix
+            with col2:
+                # Department Performance Matrix
                         dept_social = filtered_df.groupby('department').agg({
                             'social_well_being_index': 'mean',
                             'employee_turnover_pct': 'mean',
@@ -991,7 +991,7 @@ else:
                                          size='avg_training_hours_per_employee', color='department',
                                          title="Department Performance: Well-Being vs Turnover",
                                          trendline="lowess")
-                        fig.update_layout(yaxis_title="Turnover Rate", yaxis_tickformat=".1%", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+                fig.update_layout(yaxis_title="Turnover Rate", yaxis_tickformat=".1%", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
                 st.plotly_chart(fig, use_container_width=True)
 
 
@@ -1316,11 +1316,11 @@ else:
                                          color='region',
                                          title="Regional Governance vs ESG Performance",
                                          hover_data=['region'])
-                        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
-                        st.plotly_chart(fig, use_container_width=True)
+                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+                st.plotly_chart(fig, use_container_width=True)
 
-                    with col2:
-                        # Department Risk Profile
+            with col2:
+                # Department Risk Profile
                         dept_risk = filtered_df.groupby('department').agg({
                             'data_breaches_count': 'sum',
                             'fines_penalties_usd_m': 'sum',
@@ -1333,8 +1333,8 @@ else:
                                          size='whistleblower_reports',
                                          color='department',
                                          title="Department Risk Profile Analysis")
-                        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
-                        st.plotly_chart(fig, use_container_width=True)
+                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+                st.plotly_chart(fig, use_container_width=True)
 
 
 
