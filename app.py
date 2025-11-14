@@ -188,7 +188,7 @@ def inject_custom_css():
 # Set page configuration
 st.set_page_config(
     page_title="GreenLens ESG Analytics",
-    page_icon="eco", # <-- ICON UPDATED
+    page_icon="🌱", # <-- FIXED: Changed "eco" back to "🌱"
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -220,7 +220,7 @@ def load_uploaded_data(file):
         return None
 
 # App title and description
-st.title("GreenLens ESG Analytics Dashboard", icon="🌱") # <-- FIXED: Changed "eco" to "🌱"
+st.title("🌱 GreenLens ESG Analytics Dashboard") # <-- FIXED: Moved emoji into the title string, removed icon parameter
 st.markdown("""
 Comprehensive analysis of Environmental, Social, and Governance performance metrics 
 across companies, regions, and time periods.
