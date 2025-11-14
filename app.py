@@ -220,7 +220,7 @@ def load_uploaded_data(file):
         return None
 
 # App title and description
-st.title("GreenLens ESG Analytics Dashboard", icon="eco")
+st.title("GreenLens ESG Analytics Dashboard", icon="🌱") # <-- FIXED: Changed "eco" to "🌱"
 st.markdown("""
 Comprehensive analysis of Environmental, Social, and Governance performance metrics 
 across companies, regions, and time periods.
