@@ -593,9 +593,9 @@ else:
         with st.expander(":material/analytics: Detailed Environmental Analysis"):
             col1, col2 = st.columns(2)
 
-                    with col1:
-                        # Energy vs Carbon Correlation
-                        fig = px.scatter(filtered_df, x='energy_intensity', y='carbon_intensity',
+            with col1: # <-- FIXED: Indentation corrected
+                # Energy vs Carbon Correlation
+                fig = px.scatter(filtered_df, x='energy_intensity', y='carbon_intensity',
                                          color='department', trendline="ols",
                                          title="Energy Intensity vs Carbon Intensity Correlation",
                                          hover_data=['region', 'year'])
@@ -963,9 +963,9 @@ else:
         with st.expander(":material/analytics: Detailed Social Analysis"):
             col1, col2 = st.columns(2)
 
-                    with col1:
-                        # Regional Social Performance Comparison
-                        region_social = filtered_df.groupby('region').agg({
+            with col1: # <-- FIXED: Indentation corrected
+                # Regional Social Performance Comparison
+                region_social = filtered_df.groupby('region').agg({
                             'social_well_being_index': 'mean',
                             'diversity_inclusion_index': 'mean',
                             'employee_engagement_score': 'mean',
@@ -1301,9 +1301,9 @@ else:
         with st.expander(":material/table_view: Detailed Governance Analysis"):
             col1, col2 = st.columns(2)
 
-                    with col1:
-                        # Regional Governance Performance
-                        regional_gov = filtered_df.groupby('region').agg({
+            with col1: # <-- FIXED: Indentation corrected
+                # Regional Governance Performance
+                regional_gov = filtered_df.groupby('region').agg({
                             'governance_effectiveness_index': 'mean',
                             'esg_score': 'mean',
                             'controversy_level_0_low_3_high': 'mean'
