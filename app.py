@@ -227,7 +227,7 @@ across companies, regions, and time periods.
 """)
 
 # --- SIDEBAR: DATA SOURCE ---
-st.sidebar.header("Data Source", icon="folder_open")
+st.sidebar.header(":material/folder_open: Data Source") # <-- FIXED
 uploaded_file = st.sidebar.file_uploader("Upload your own CSV", type=["csv"])
 
 # --- NEW: Add info expander ---
@@ -256,7 +256,7 @@ if df is None:
 else:
     try:
         # Sidebar filters
-        st.sidebar.header("Filter Data", icon="filter_alt")
+        st.sidebar.header(":material/filter_alt: Filter Data") # <-- FIXED
 
         # Company selection
         companies = df['company_name'].unique()
@@ -303,7 +303,7 @@ else:
             st.warning("No data available for the selected filters. Please adjust your selection.")
         else:
             # Key Metrics Overview
-            st.header("Key Performance Indicators", icon="query_stats")
+            st.header(":material/query_stats: Key Performance Indicators") # <-- FIXED
 
             col1, col2, col3, col4, col5 = st.columns(5)
 
@@ -338,7 +338,7 @@ else:
             ])
 
             with tab1:
-                st.subheader("Environmental Performance", icon="eco")
+                st.subheader(":material/eco: Environmental Performance") # <-- FIXED
 
                 # Calculate new metrics
                 filtered_df = filtered_df.copy()
@@ -676,7 +676,7 @@ else:
                         st.plotly_chart(fig, use_container_width=True)
 
             with tab2:
-                st.subheader("Social Performance", icon="groups")
+                st.subheader(":material/groups: Social Performance") # <-- FIXED
 
                 # Calculate new social metrics
                 filtered_df = filtered_df.copy()
@@ -1076,7 +1076,7 @@ else:
                         st.plotly_chart(fig, use_container_width=True)
 
             with tab3:
-                st.subheader("Governance Performance", icon="gavel")
+                st.subheader(":material/gavel: Governance Performance") # <-- FIXED
 
                 # Calculate Governance Effectiveness Index
                 filtered_df['governance_effectiveness_index'] = (
@@ -1410,7 +1410,7 @@ else:
                         st.plotly_chart(fig, use_container_width=True)
 
             with tab4:
-                st.subheader("Trend Analysis", icon="trending_up")
+                st.subheader(":material/trending_up: Trend Analysis") # <-- FIXED
 
                 # ESG Score trends
                 esg_trends = filtered_df.groupby(['year', 'quarter'])['esg_score'].mean().reset_index()
@@ -1440,7 +1440,7 @@ else:
                     st.plotly_chart(fig, use_container_width=True)
 
             with tab5:
-                st.subheader("Detailed Data View", icon="table_view")
+                st.subheader(":material/table_view: Detailed Data View") # <-- FIXED
 
                 # Show raw data with additional metrics
                 display_columns = [
