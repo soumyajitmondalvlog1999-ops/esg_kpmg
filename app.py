@@ -188,7 +188,7 @@ def inject_custom_css():
 # Set page configuration
 st.set_page_config(
     page_title="GreenLens ESG Analytics",
-    page_icon=":seedling:", # <-- ICON UPDATED
+    page_icon="eco", # <-- ICON UPDATED
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -587,25 +587,98 @@ else:
                                              name="Carbon Intensity"), secondary_y=True)
                     fig.update_yaxes(title_text="Green Efficiency Score", secondary_y=False)
                     fig.update_yaxes(title_text="Carbon Intensity", secondary_y=True)
-            st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, use_container_width=True)
 
-        # Additional detailed analysis at the end
-        with st.expander(":material/analytics: Detailed Environmental Analysis"):
-            col1, col2 = st.columns(2)
+                # Additional detailed analysis at the end
+                with st.expander(":material/analytics: Detailed Environmental Analysis"):
+                    col1, col2 = st.columns(2)
 
-            with col1: # <-- FIXED: Indentation corrected
-                # Energy vs Carbon Correlation
-                fig = px.scatter(filtered_df, x='energy_intensity', y='carbon_intensity',
-                                         color='department', trendline="ols",
-                                         title="Energy Intensity vs Carbon Intensity Correlation",
-                                         hover_data=['region', 'year'])
-                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
-                st.plotly_chart(fig, use_container_width=True)
+                    with col1:
+                        # Energy vs Carbon Correlation
+                        fig = px.scatter(filtered_df, x='energy_intensity', y='carbon_intensity',
+                                                 color='department', trendline="ols",
+                                                 title="Energy Intensity vs Carbon Intensity Correlation",
+                                                 hover_data=['region', 'year'])
+                        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+                        st.plotly_chart(fig, use_container_width=True)
 
-    with tab2:
-        st.subheader("Social Performance", icon="groups")
+                    with col2:
+                        # Environmental Performance by Region - ALTERNATIVE CLEAN VERSION
+                        region_performance = filtered_df.groupby('region').agg({
+                            'green_efficiency_score': 'mean',
+                            'carbon_intensity': 'mean',
+                            'renewable_energy_share_pct': 'mean',
+                            'waste_recycled_pct': 'mean'
+                        }).reset_index()
 
-        # Calculate new social metrics
+                        # Format the values
+                        region_performance['green_efficiency_score'] = region_performance['green_efficiency_score'].round(1)
+                        region_performance['carbon_intensity'] = region_performance['carbon_intensity'].round(1)
+                        region_performance['renewable_energy_share_pct'] = region_performance[
+                            'renewable_energy_share_pct'].round(1)
+                        region_performance['waste_recycled_pct'] = region_performance['waste_recycled_pct'].round(1)
+
+                        # Create a grouped bar chart for better readability
+                        fig = go.Figure()
+                        # --- FINAL THEME UPDATE ---
+                        fig.update_layout(
+                            paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                            legend_font_color='#f1f5f9',
+                            title={
+                                'text': "Regional Environmental Performance Comparison",
+                                'font': {'color': '#f1f5f9'}
+                            },
+                            xaxis_title="Region",
+                            yaxis_title="Score (%)",
+                            yaxis2=dict(
+                                title="Carbon Intensity (tCO₂e/MUSD)",
+                                overlaying='y',
+                                side='right'
+                            ),
+                            barmode='group',
+                            font=dict(size=12), # Color will be inherited from dark theme
+                            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                            hovermode='x unified'
+                        )
+
+                        # Add bars for each metric
+                        fig.add_trace(go.Bar(
+                            name='Green Efficiency Score',
+                            x=region_performance['region'],
+                            y=region_performance['green_efficiency_score'],
+                            marker_color='#2E8B57'
+                        ))
+
+                        fig.add_trace(go.Bar(
+                            name='Renewable Energy %',
+                            x=region_performance['region'],
+                            y=region_performance['renewable_energy_share_pct'],
+                            marker_color='#1E90FF'
+                        ))
+
+                        fig.add_trace(go.Bar(
+                            name='Waste Recycled %',
+                            x=region_performance['region'],
+                            y=region_performance['waste_recycled_pct'],
+                            marker_color='#FF8C00'
+                        ))
+
+                        # Add carbon intensity as a line (since it's on a different scale)
+                        fig.add_trace(go.Scatter(
+                            name='Carbon Intensity (tCO₂e/MUSD)',
+                            x=region_performance['region'],
+                            y=region_performance['carbon_intensity'],
+                            mode='lines+markers',
+                            yaxis='y2',
+                            line=dict(color='#FF4500', width=3),
+                            marker=dict(size=8, color='#FF4500')
+                        ))
+                        st.plotly_chart(fig, use_container_width=True)
+
+            with tab2:
+                st.subheader("Social Performance", icon="groups")
+
+                # Calculate new social metrics
                 filtered_df = filtered_df.copy()
 
                 # Calculate male percentage for gender diversity charts
@@ -627,9 +700,9 @@ else:
                                                                    filtered_df['board_gender_diversity_pct']
                                                            ) / 3 * 100
 
-        # Social KPIs
-        st.markdown("#### :material/badge: Key Social Metrics")
-        col1, col2, col3, col4 = st.columns(4)
+                # Social KPIs
+                st.markdown("#### :material/badge: Key Social Metrics")
+                col1, col2, col3, col4 = st.columns(4)
 
                 with col1:
                     avg_engagement = filtered_df['employee_engagement_score'].mean()
@@ -647,9 +720,9 @@ else:
                     social_index = filtered_df['social_well_being_index'].mean()
                     st.metric("Social Well-Being Index", f"{social_index:.1f}")
 
-        # Section 1: Workforce Diversity & Inclusion
-        st.markdown("#### :material/diversity_3: Workforce Diversity & Inclusion")
-        col1, col2 = st.columns(2)
+                # Section 1: Workforce Diversity & Inclusion
+                st.markdown("#### :material/diversity_3: Workforce Diversity & Inclusion")
+                col1, col2 = st.columns(2)
 
                 with col1:
                     # Gender Diversity by Department
@@ -693,8 +766,8 @@ else:
                     st.plotly_chart(fig, use_container_width=True)
 
                 # Section 2: Employee Well-Being & Development
-        st.markdown("#### :material/work: Employee Well-Being & Development")
-        col1, col2 = st.columns(2)
+                st.markdown("#### :material/work: Employee Well-Being & Development")
+                col1, col2 = st.columns(2)
 
                 with col1:
                     # Average Training Hours by Department
@@ -735,8 +808,8 @@ else:
                     st.plotly_chart(fig, use_container_width=True)
 
                 # Section 3: Employee Engagement & Satisfaction
-        st.markdown("#### :material/sentiment_satisfied: Employee Engagement & Satisfaction")
-        col1, col2 = st.columns(2)
+                st.markdown("#### :material/sentiment_satisfied: Employee Engagement & Satisfaction")
+                col1, col2 = st.columns(2)
 
                 with col1:
                     # Employee Engagement Score Over Time
@@ -793,8 +866,8 @@ else:
                     st.plotly_chart(fig, use_container_width=True)
 
                 # Section 4: Social Equity & Fairness
-        st.markdown("#### :material/balance: Social Equity & Fairness")
-        col1, col2 = st.columns(2)
+                st.markdown("#### :material/balance: Social Equity & Fairness")
+                col1, col2 = st.columns(2)
 
                 with col1:
                     # 1. Pay Equity vs Engagement - Changed to Grouped Bar Chart
@@ -928,8 +1001,8 @@ else:
                     st.plotly_chart(fig, use_container_width=True)
 
                 # Section 5: Composite Index Metrics
-        st.markdown("#### :material/pie_chart: Composite Social Metrics")
-        col1, col2 = st.columns(2)
+                st.markdown("#### :material/pie_chart: Composite Social Metrics")
+                col1, col2 = st.columns(2)
 
                 with col1:
                     # Social Well-Being Index by Department
@@ -957,15 +1030,23 @@ else:
                                  color='diversity_inclusion_index',
                                  color_continuous_scale='Plasma')
                     fig.update_layout(yaxis_title="Diversity & Inclusion Index", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
-            st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, use_container_width=True)
 
-        # Additional detailed analysis
-        with st.expander(":material/analytics: Detailed Social Analysis"):
-            col1, col2 = st.columns(2)
+                    # Diversity & Inclusion Index Trend
+                    diversity_trend = filtered_df.groupby('year')['diversity_inclusion_index'].mean().reset_index()
+                    fig = px.line(diversity_trend, x='year', y='diversity_inclusion_index',
+                                  title="Diversity & Inclusion Index Over Time",
+                                  markers=True)
+                    fig.update_layout(yaxis_title="Diversity & Inclusion Index", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+                    st.plotly_chart(fig, use_container_width=True)
 
-            with col1: # <-- FIXED: Indentation corrected
-                # Regional Social Performance Comparison
-                region_social = filtered_df.groupby('region').agg({
+                # Additional detailed analysis
+                with st.expander(":material/analytics: Detailed Social Analysis"):
+                    col1, col2 = st.columns(2)
+
+                    with col1:
+                        # Regional Social Performance Comparison
+                        region_social = filtered_df.groupby('region').agg({
                             'social_well_being_index': 'mean',
                             'diversity_inclusion_index': 'mean',
                             'employee_engagement_score': 'mean',
@@ -976,11 +1057,11 @@ else:
                                          size='employee_engagement_score', color='region',
                                          title="Regional Social Performance: Well-Being vs Diversity",
                                          hover_data=['pay_equity_ratio_female_to_male'])
-                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
-                st.plotly_chart(fig, use_container_width=True)
+                        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+                        st.plotly_chart(fig, use_container_width=True)
 
-            with col2:
-                # Department Performance Matrix
+                    with col2:
+                        # Department Performance Matrix
                         dept_social = filtered_df.groupby('department').agg({
                             'social_well_being_index': 'mean',
                             'employee_turnover_pct': 'mean',
@@ -991,15 +1072,13 @@ else:
                                          size='avg_training_hours_per_employee', color='department',
                                          title="Department Performance: Well-Being vs Turnover",
                                          trendline="lowess")
-                fig.update_layout(yaxis_title="Turnover Rate", yaxis_tickformat=".1%", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
-                st.plotly_chart(fig, use_container_width=True)
+                        fig.update_layout(yaxis_title="Turnover Rate", yaxis_tickformat=".1%", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+                        st.plotly_chart(fig, use_container_width=True)
 
+            with tab3:
+                st.subheader("Governance Performance", icon="gavel")
 
-
-    with tab3:
-        st.subheader("Governance Performance", icon="gavel")
-
-        # Calculate Governance Effectiveness Index
+                # Calculate Governance Effectiveness Index
                 filtered_df['governance_effectiveness_index'] = (
                         filtered_df['independent_directors_pct'] * 0.3 +
                         filtered_df['board_gender_diversity_pct'] * 0.2 +
@@ -1009,9 +1088,9 @@ else:
                         (1 - filtered_df['controversy_level_0_low_3_high'] / 3) * 0.1
                 )
 
-        # Governance KPIs
-        st.markdown("#### :material/account_balance: Key Governance Metrics")
-        col1, col2, col3, col4 = st.columns(4)
+                # Governance KPIs
+                st.markdown("#### :material/account_balance: Key Governance Metrics")
+                col1, col2, col3, col4 = st.columns(4)
 
                 with col1:
                     governance_index = filtered_df['governance_effectiveness_index'].mean()
@@ -1029,11 +1108,9 @@ else:
                     controversies = filtered_df['controversy_level_0_low_3_high'].mean()
                     st.metric("Avg Controversy Level", f"{controversies:.2f}")
 
-        # Section 1: Board & Leadership Insights
-        st.markdown("#### :material/supervised_user_circle: Board & Leadership Insights")
-        col1, col2 = st.columns(2)
-
-
+                # Section 1: Board & Leadership Insights
+                st.markdown("#### :material/supervised_user_circle: Board & Leadership Insights")
+                col1, col2 = st.columns(2)
 
                 with col1:
                     # Regional Comparison of Board Structures
@@ -1073,7 +1150,6 @@ else:
                     ))
                     st.plotly_chart(fig, use_container_width=True)
 
-
                 with col2:
 
                     # Board composition over time (existing but enhanced)
@@ -1086,8 +1162,8 @@ else:
                     st.plotly_chart(fig, use_container_width=True)
 
                 # Section 2: Ethics, Compliance & Risk
-        st.markdown("#### :material/shield: Ethics, Compliance & Risk")
-        col1, col2 = st.columns(2)
+                st.markdown("#### :material/shield: Ethics, Compliance & Risk")
+                col1, col2 = st.columns(2)
 
                 with col1:
                     # Governance Risk Heatmap
@@ -1153,13 +1229,12 @@ else:
                     st.plotly_chart(fig, use_container_width=True)
 
                 # Section 3: Transparency & Reporting Features
-        st.markdown("#### :material/summarize: Transparency & Reporting Features")
-        col1, col2 = st.columns(2)
-
+                st.markdown("#### :material/summarize: Transparency & Reporting Features")
+                col1, col2 = st.columns(2)
 
                 with col1:
                     # Governance Compliance Scorecard
-                    st.markdown("##### :clipboard: Governance Compliance Scorecard") # <-- ICON UPDATED
+                    st.markdown("##### :material/fact_check: Governance Compliance Scorecard") # <-- ICON UPDATED
                     compliance_data = filtered_df.groupby('department').agg({
                         'anti_corruption_training_pct': 'mean',
                         'esg_policy_coverage_pct': 'mean',
@@ -1181,7 +1256,7 @@ else:
                 with col2:
 
                     # Benchmark Governance Score
-                    st.markdown("##### :dart: Governance Benchmark") # <-- ICON UPDATED (changed from target)
+                    st.markdown("##### :material/track_changes: Governance Benchmark") # <-- ICON UPDATED
                     current_gov_index = filtered_df['governance_effectiveness_index'].mean()
                     previous_year = filtered_df[filtered_df['year'] == filtered_df['year'].max() - 1]
                     previous_gov_index = previous_year[
@@ -1196,8 +1271,8 @@ else:
                         st.metric("Industry Benchmark", f"{industry_benchmark}")
 
                 # Section 4: Performance & Accountability
-        st.markdown("#### :material/assessment: Performance & Accountability")
-        col1, col2 = st.columns(2)
+                st.markdown("#### :material/assessment: Performance & Accountability")
+                col1, col2 = st.columns(2)
 
                 with col1:
                     # ESG Score vs Governance Variables Correlation
@@ -1212,8 +1287,6 @@ else:
                                     zmin=-1, zmax=1)
                     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
                     st.plotly_chart(fig, use_container_width=True)
-
-
 
                 with col2:
                     # Governance Effectiveness Index Gauge
@@ -1253,8 +1326,8 @@ else:
                     st.plotly_chart(fig, use_container_width=True)
 
                 # Section 5: Policy & Compliance Oversight
-        st.markdown("#### :material/policy: Policy & Compliance Oversight")
-        col1, col2 = st.columns(2)
+                st.markdown("#### :material/policy: Policy & Compliance Oversight")
+                col1, col2 = st.columns(2)
 
                 with col1:
                     # Policy Adoption vs ESG Score
@@ -1295,15 +1368,15 @@ else:
                     fig = px.pie(controversy_data, values='count', names='controversy_level',
                                  title="Distribution of Controversy Levels")
                     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
-            st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, use_container_width=True)
 
-        # Detailed Analysis Expandable Section
-        with st.expander(":material/table_view: Detailed Governance Analysis"):
-            col1, col2 = st.columns(2)
+                # Detailed Analysis Expandable Section
+                with st.expander(":material/table_view: Detailed Governance Analysis"):
+                    col1, col2 = st.columns(2)
 
-            with col1: # <-- FIXED: Indentation corrected
-                # Regional Governance Performance
-                regional_gov = filtered_df.groupby('region').agg({
+                    with col1:
+                        # Regional Governance Performance
+                        regional_gov = filtered_df.groupby('region').agg({
                             'governance_effectiveness_index': 'mean',
                             'esg_score': 'mean',
                             'controversy_level_0_low_3_high': 'mean'
@@ -1316,11 +1389,11 @@ else:
                                          color='region',
                                          title="Regional Governance vs ESG Performance",
                                          hover_data=['region'])
-                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
-                st.plotly_chart(fig, use_container_width=True)
+                        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+                        st.plotly_chart(fig, use_container_width=True)
 
-            with col2:
-                # Department Risk Profile
+                    with col2:
+                        # Department Risk Profile
                         dept_risk = filtered_df.groupby('department').agg({
                             'data_breaches_count': 'sum',
                             'fines_penalties_usd_m': 'sum',
@@ -1333,27 +1406,43 @@ else:
                                          size='whistleblower_reports',
                                          color='department',
                                          title="Department Risk Profile Analysis")
-                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
-                st.plotly_chart(fig, use_container_width=True)
+                        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+                        st.plotly_chart(fig, use_container_width=True)
 
+            with tab4:
+                st.subheader("Trend Analysis", icon="trending_up")
 
-
-    with tab4:
-        st.subheader("Trend Analysis", icon="trending_up")
-
-        # ESG Score trends
+                # ESG Score trends
                 esg_trends = filtered_df.groupby(['year', 'quarter'])['esg_score'].mean().reset_index()
                 esg_trends['period'] = esg_trends['year'].astype(str) + '-Q' + esg_trends['quarter'].astype(str)
 
                 fig = px.line(esg_trends, x='period', y='esg_score',
                                   title="ESG Score Trend Over Time")
                 fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
-            st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, use_container_width=True)
 
-    with tab5:
-        st.subheader("Detailed Data View", icon="table_view")
+                col1, col2 = st.columns(2)
 
-        # Show raw data with additional metrics
+                with col1:
+                    # Regional comparison
+                    regional_esg = filtered_df.groupby('region')['esg_score'].mean().reset_index()
+                    fig = px.bar(regional_esg, x='region', y='esg_score',
+                                 title="Average ESG Score by Region")
+                    fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+                    st.plotly_chart(fig, use_container_width=True)
+
+                with col2:
+                    # Department comparison
+                    dept_esg = filtered_df.groupby('department')['esg_score'].mean().reset_index()
+                    fig = px.bar(dept_esg, x='department', y='esg_score',
+                                 title="Average ESG Score by Department")
+                    fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', title_font_color='#f1f5f9', legend_font_color='#f1f5f9')
+                    st.plotly_chart(fig, use_container_width=True)
+
+            with tab5:
+                st.subheader("Detailed Data View", icon="table_view")
+
+                # Show raw data with additional metrics
                 display_columns = [
                     'company_name', 'region', 'department', 'year', 'quarter',
                     'esg_score', 'renewable_energy_share_pct', 'scope1_emissions_tco2e',
